@@ -47,15 +47,8 @@ for row in reader:
     product[row[0]].append(row[1])
 writer2 = csv.writer(open('product_details.csv', 'wb+'), delimiter=';', quotechar='"')
 for k, v in product.items():
-    for i in v:
-        if i != []:
-            print 'aa'
-#    if v == ' ':
-#        del product[v]
-#    print '%s - > %s' % (k, v)
-#    writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16]])
-
-#print 'All done'
+    writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16]])
+print 'All done'
 
 
 
