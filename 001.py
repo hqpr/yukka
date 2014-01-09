@@ -5,25 +5,27 @@ import urllib
 import re
 import csv
 import lxml.html
+import time
 
-page = 'page.htm'
+page = 'http://www.yukka.co.uk/men/mens-clothing/hats-caps.html'
 
 # Saving to csv list of titles and urls from page
 # First cycle on category page
 
-#writer = csv.writer(open('list_of_products.csv', 'wb+'), delimiter=';', quotechar='"')
-#c = urllib.urlopen(page)
-#doc = lxml.html.document_fromstring(c.read())
-#for item in doc.cssselect('h2.product-name a'):
-#        name = item.text
-#        urls = item.get('href')
-#        writer.writerow([name, urls])
-#print 'File created'
+writer = csv.writer(open('list_of_products.csv', 'wb+'), delimiter=';', quotechar='"')
+c = urllib.urlopen(page)
+doc = lxml.html.document_fromstring(c.read())
+for item in doc.cssselect('h2.product-name a'):
+        name = item.text
+        urls = item.get('href')
+        writer.writerow([name, urls])
+print '#1 CSV File created (Category Page Successfully Parsed)'
 
 # Second cycle with reading list of urls
 product = {}
 reader = csv.reader(open('list_of_products.csv', 'rb'), delimiter=';', quotechar='"')
 for row in reader:
+    time.sleep(3)
     c1 = urllib.urlopen(row[1])     # [1] == url // [0] == Product title
     doc1 = lxml.html.document_fromstring(c1.read())
     for img in doc1.cssselect('div.more-views a'):
@@ -33,10 +35,16 @@ for row in reader:
         product[row[0]].append(images)
     for desc in doc1.cssselect('div.product-tabs-content div'):
         description = desc.text
-        description = description.encode('utf-8')
-        description = description.replace('-', '')
+        try:
+            description = description.encode('utf-8')
+        except:
+            pass
+        try:
+            description = description.replace('-', '')
+        except:
+            pass
         product[row[0]].append(description)
-
+    time.sleep(2)
     c1 = urllib.urlopen(row[1])
     match = re.findall(r'SKU(\d+)| Brand\:[<]\/span[>](.*)', c1.read())
     for m in match:
