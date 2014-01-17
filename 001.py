@@ -7,7 +7,6 @@ import csv
 import lxml.html
 import time
 
-
 page = 'http://www.yukka.co.uk/men/mens-clothing/hats-caps.html'
 
 # Saving to csv list of titles and urls from page
@@ -26,7 +25,7 @@ print 'CSV File created (Category Page was Successfully Parsed)'
 
 product = {}        # Main dict with all data
 reader = csv.reader(open('list_of_products.csv', 'rb'), delimiter=';', quotechar='"')
-print 'Open the CSV File'
+#print 'Open the CSV File'
 
 for row in reader:
     time.sleep(2)
@@ -55,8 +54,14 @@ for row in reader:
             pass
 
     c1 = urllib.urlopen(row[1])
-    match = re.findall(r'SKU(\d+)| Brand\:[<]\/span[>](.*)', c1.read())
+    match = re.findall(r'SKU(\d+)| Brand\:[<]\/span[>](.*)| class\=\"price\"[>]\£(.*)[<]', c1.read())
     for m in match:
+        price = m[2]
+        try:
+            price = price.replace('</span>', '')
+        except:
+            pass
+        product[row[0]].append(price)
         sku = 'SKU%s' % m[0]       # SKU
         product[row[0]].append(sku)
         brand = m[1]        # Brand
@@ -65,10 +70,31 @@ for row in reader:
         product[row[0]].append(row[1])
     except:
         pass
+
 writer2 = csv.writer(open('product_details.csv', 'ab+'), delimiter=';', quotechar='"')
 for k, v in product.items():
-#        print '%s -> %s' % (k, len(v))
-    if len(v) == 18:
+#    print '%s -> %s' % (k, len(v))
+    if len(v) == 28:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25], v[26], v[27]])
+    elif len(v) == 27:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25], v[26]])
+    elif len(v) == 26:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24], v[25]])
+    elif len(v) == 25:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23], v[24]])
+    elif len(v) == 24:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22], v[23]])
+    elif len(v) == 23:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21], v[22]])
+    elif len(v) == 22:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20], v[21]])
+    elif len(v) == 21:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19], v[20]])
+    elif len(v) == 20:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18], v[19]])
+    elif len(v) == 19:
+        writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17], v[18]])
+    elif len(v) == 18:
         writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16], v[17]])
     elif len(v) == 17:
         writer2.writerow([k, v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7], v[8], v[9], v[10], v[11], v[12], v[13], v[14], v[15], v[16]])
@@ -100,6 +126,7 @@ for k, v in product.items():
         writer2.writerow([k, v[0], v[1], v[2], v[3]])
     else:
         pass
+
 #            print '[ERROR] %s' % k
 
 
